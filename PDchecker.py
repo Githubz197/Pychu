@@ -2,6 +2,13 @@ import requests
 import re
 import time
 
+def SendTelegramNotification(i):
+    chat_id = "1760514861"
+    TOKEN = "5696092807:AAGMeYmZH23Er2E0rllHd9-FKHgO0klYGaQ"
+    #url = f"https://api.telegram.org/bot{TOKEN}/getUpdates"
+    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id}&text={i}&parse_mode=MarkdownV2"
+    print(requests.get(url).json())     # this sends the message
+
 # Custom headers (mimicking a browser)
 headers = {
     "User-Agent": (
@@ -54,7 +61,8 @@ for user in users:
                 if match:
                     timestamp = int(match.group(1))
                     if timestamp >= two_days_ago_ms:
-                        print(f"Y | {user}  {city}  - ACTIVE")
+                        print(f"Y | {user}  {city}  - ACTIVE"); user = user.replace('_', '\\_')
+                        SendTelegramNotification(f"_*PD:*_ {user} in {city.replace('-', ' ')}\\!")
                         found = True
                         break  # Found and active, move to next user
                     else:
