@@ -3,7 +3,7 @@ name: Run Python Script
 on:
   repository_dispatch:
   schedule:
-    - cron: '*/58 * * * *'  # Runs every 15 minutes if I wrote 6 min, so test 59 now (UTC)
+    - cron: '0 6,9,12,15,18,21 * * *'  # Runs at 6am, 9am, 12pm, 3pm, 6pm, 9pm UTC
   workflow_dispatch:         # Allows manual run too
 
 jobs:
