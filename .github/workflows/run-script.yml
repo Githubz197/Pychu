@@ -6,7 +6,7 @@ on:
     - cron: '0 13,16,19,22 * * 1-5'  # Weekdays (Mon–Fri) at 13:00, 16:00, 19:00, 22:00 UTC
     - cron: '0 1,4 * * 2-6'          # Tue–Sat at 01:00 and 04:00 UTC
     - cron: '0 13-23 * * 6'          # Saturdays hourly from 13:00 to 23:00 UTC
-    - cron: '0 0,1 * * 7'            # Sundays at 00:00 and 01:00 UTC
+    - cron: '0 0,1 * * 0'            # Sundays at 00:00 and 01:00 UTC
   workflow_dispatch:     # Allows manual triggering of the workflow from the GitHub UI
 
 jobs:
