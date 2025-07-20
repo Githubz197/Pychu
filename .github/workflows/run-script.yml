@@ -34,7 +34,7 @@ jobs:
           echo "DATE=$DATE" >> $GITHUB_ENV  # Export DATE as environment variable
 
       - name: Upload output file as artifact  # Save output as downloadable artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: output-${{ env.DATE }}  # Use the DATE from environment variable
           path: output_*.txt
