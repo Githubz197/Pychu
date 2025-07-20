@@ -1,27 +1,40 @@
-name: Run Python Script
+name: Run Python Script  # Workflow name shown in the GitHub Actions UI
 
 on:
-  repository_dispatch:
-  schedule:
-    - cron: '0 6,9,12,15,18,21 * * 1-5'  # Weekdays
-    - cron: '0 6-18 * * 6'              # Saturdays every hour from 6 AM–6 PM UTC
-  workflow_dispatch:         # Allows manual run too
+  repository_dispatch:  # Allows triggering via external events (e.g., webhook or API)
+  schedule:             # Scheduled automatic runs using cron syntax
+    - cron: '0 13,16,19,22 * * 1-5'  # Weekdays (Mon–Fri) at 13:00, 16:00, 19:00, 22:00 UTC
+    - cron: '0 1,4 * * 2-6'          # Tue–Sat at 01:00 and 04:00 UTC
+    - cron: '0 13-23 * * 6'          # Saturdays hourly from 13:00 to 23:00 UTC
+    - cron: '0 0,1 * * 7'            # Sundays at 00:00 and 01:00 UTC
+  workflow_dispatch:     # Allows manual triggering of the workflow from the GitHub UI
 
 jobs:
   run-script:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
 
     steps:
-      - name: Checkout code
+      - name: Checkout code  # Clone the repository to the runner
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Set up Python  # Install specified Python version
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install dependencies  # Install required Python packages
         run: pip install requests
 
-      - name: Run script
-        run: python PDchecker.py
+      - name: Run script and append output with date  # Run Python script and append output to date-stamped file
+        run: |
+          DATE=$(date '+%Y-%m-%d')  # Get today's date
+          FILENAME="output_${DATE}.txt"
+          echo "===== Run at $(date) =====" >> "$FILENAME"  # Timestamp header
+          python PDchecker.py >> "$FILENAME" 2>&1
+          echo "DATE=$DATE" >> $GITHUB_ENV  # Export DATE as environment variable
+
+      - name: Upload output file as artifact  # Save output as downloadable artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: output-${{ env.DATE }}  # Use the DATE from environment variable
+          path: output_*.txt
